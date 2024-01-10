@@ -7,7 +7,10 @@
   inputs.flake-utils.url = "github:numtide/flake-utils";
   inputs.flake-utils.inputs.systems.follows = "systems";
 
-  outputs = { self, nixpkgs, nixos-hardware, flake-utils, ... }:
+  inputs.cmake-nix-hello-world.url = github:samularity/cmake-nix-hello-world/32bit;
+  inputs.cmake-nix-hello-world.inputs.nixpkgs.follows = "nixpkgs";
+
+  outputs = { self, nixpkgs, nixos-hardware, cmake-nix-hello-world, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       rec {
         packages.default = packages.sd-image;
@@ -15,29 +18,29 @@
           configuration =
             { config, pkgs, ... }: {
               imports = [
-                "./linux-6.6.nix"
                 "${nixos-hardware}/starfive/visionfive/v2/sd-image-installer.nix"
               ];
 
+                #use "own" kernel
+                boot.kernelPackages = (pkgs.callPackage ./linux-6.6.nix {
+                  inherit (config.boot) kernelPatches;
+                });
 
-              users.users.sam = {
-                isNormalUser = true;
-                description = "sam";
-                extraGroups = [ "networkmanager" "wheel" "dialout" ];
-              };
-
-           
-
-              # If you want to use ssh set a password
-              users.users.sam.password = "1234";
-              # OR add your public ssh key
-              # users.users.nixos.openssh.authorizedKeys.keys = [ "ssh-rsa ..." ];
+              # set password for ssh login
+              users.users.nixos.password = "nixos";
 
               # AND configure networking
               networking.interfaces.end0.useDHCP = true;
               networking.interfaces.end1.useDHCP = true;
 
-              # Additional configuration goes here
+              networking.firewall = {
+                enable = true;
+                allowedTCPPorts = [ 23 50000 52000 ];
+                allowedUDPPorts = [ 50000 50001 ];
+                allowedUDPPortRanges = [
+                  { from = 19997; to = 19999; }
+                ];
+              };
 
               sdImage.compressImage = true;
 
@@ -56,6 +59,8 @@
                 htop
                 python3
                 file
+                cmake-nix-hello-world.packages.${config.nixpkgs.crossSystem.system}.default
+                #(callPackage ./cmake/package.nix {} ) # use for loacal package
               ];
 
 

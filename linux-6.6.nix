@@ -1,7 +1,7 @@
 { lib, callPackage, linuxPackagesFor, kernelPatches, ... }:
 
 let
-  modDirVersion = "6.7.0";
+  modDirVersion = "6.7.0-rc7";
   linuxPkg = { lib, fetchFromGitHub, buildLinux, ... }@args:
     buildLinux (args // {
       version = "${modDirVersion}-starfive-visionfive2";
@@ -10,7 +10,7 @@ let
         owner = "starfive-tech";
         repo = "linux";
         rev = "9fbbff4c77307f8f483d5e3237b77b6c4b02f066";
-        hash = "sha256-iO7tnnWYfveVbyvVZKL0dDLwONijt1n0RUD1kTkOQgg=";
+        hash = "sha256-2j3I5uZ/VP5qO8Lo21h0WFySOoAfvga6LUMmVOYJoNk=";
       };
 
       inherit modDirVersion kernelPatches;
