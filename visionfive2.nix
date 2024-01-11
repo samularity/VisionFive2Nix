@@ -4,7 +4,7 @@
     ];
 
     #use "own" kernel
-    boot.kernelPackages = (pkgs.callPackage ./linux-6.6.nix {
+    boot.kernelPackages = (pkgs.callPackage ./linux-6.7.0-rc7.nix {
     inherit (config.boot) kernelPatches;
     });
 
