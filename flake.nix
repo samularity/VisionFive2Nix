@@ -1,5 +1,5 @@
 {
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/46ae0210ce163b3cba6c7da08840c1d63de9c701";
   inputs.nixos-hardware.url = "github:nixos/nixos-hardware";
 
   # Some dependencies of this flake are not yet available on non linux systems
