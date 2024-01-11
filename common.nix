@@ -1,7 +1,10 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, cmake-nix-hello-world, ... }: {
 
     # set password for ssh login
     users.users.nixos.password = "nixos";
+    users.users.nixos.group = "nixos";
+    users.groups.nixos = {};
+    users.users.nixos.isNormalUser = true;
     
     networking.firewall = {
         enable = true;
@@ -17,7 +20,7 @@
         htop
         python3
         file
-        cmake-nix-hello-world.packages.${config.nixpkgs.crossSystem.system}.default
+        #cmake-nix-hello-world.packages.${config.nixpkgs.crossSystem.system}.default
         #(callPackage ./cmake/package.nix {} ) # use for loacal package
     ];
 

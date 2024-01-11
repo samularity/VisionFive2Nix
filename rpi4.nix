@@ -1,9 +1,7 @@
-{ config, pkgs, nixos-hardware, nixpkgs,  ... }: {
+{ config, pkgs, nixos-hardware, ... }: {
     imports = [
-    nixos-hardware.nixosModules.raspberrry-pi-4
-    "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
+    nixos-hardware.nixosModules.raspberry-pi-4
     ];
-
 
 
     hardware = {
@@ -19,11 +17,18 @@
         raspberrypi-eeprom
     ];
 
-    sdImage.compressImage = true;
+    boot.kernelParams = [
+        "console=ttyS0,115200n8"
+        "console=tty1"
+    ];
 
     nixpkgs.crossSystem.system = "aarch64-linux";
     nixpkgs.localSystem.config = "x86_64-unknown-linux-gnu";
 
-
+    nixpkgs.overlays = [
+        (final: super: {
+            makeModulesClosure = x:
+            super.makeModulesClosure (x // { allowMissing = true; });
+    })];
 
 }

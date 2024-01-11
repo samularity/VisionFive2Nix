@@ -13,60 +13,33 @@
   outputs = { self, nixpkgs, nixos-hardware, cmake-nix-hello-world, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       rec {
-        packages.default = packages.sd-image;
-        packages.sd-image = (import "${nixpkgs}/nixos" {
-          configuration =
-            { config, pkgs, ... }: {
-              imports = [
-                "${nixos-hardware}/starfive/visionfive/v2/sd-image-installer.nix"
+        nixosConfigurations = {
+          visionfive2 = nixpkgs.lib.nixosSystem {
+            modules = [
+              ./visionfive2.nix
+              ./common.nix
               ];
-
-                #use "own" kernel
-                boot.kernelPackages = (pkgs.callPackage ./linux-6.6.nix {
-                  inherit (config.boot) kernelPatches;
-                });
-
-              # set password for ssh login
-              users.users.nixos.password = "nixos";
-
-              # AND configure networking
-              networking.interfaces.end0.useDHCP = true;
-              networking.interfaces.end1.useDHCP = true;
-
-              networking.firewall = {
-                enable = true;
-                allowedTCPPorts = [ 23 50000 52000 ];
-                allowedUDPPorts = [ 50000 50001 ];
-                allowedUDPPortRanges = [
-                  { from = 19997; to = 19999; }
-                ];
-              };
-
-              sdImage.compressImage = true;
-
-              nixpkgs.crossSystem = {
-                config = "riscv64-unknown-linux-gnu";
-                system = "riscv64-linux";
-              };
-
-              hardware.deviceTree.overlays = [{
-                name = "8GB-patch";
-                dtsFile = "${nixos-hardware}/starfive/visionfive/v2/8gb-patch.dts";
-              }];
-
-              environment.systemPackages = with pkgs; [
-                wget
-                htop
-                python3
-                file
-                cmake-nix-hello-world.packages.${config.nixpkgs.crossSystem.system}.default
-                #(callPackage ./cmake/package.nix {} ) # use for loacal package
-              ];
-
-
-              system.stateVersion = "23.05";
+              specialArgs = {inherit nixos-hardware cmake-nix-hello-world;};
             };
-          inherit system;
-        }).config.system.build.sdImage;
-      });
+
+          rpi4 = nixpkgs.lib.nixosSystem {
+            modules = [
+              ./rpi4.nix
+              ./common.nix
+              "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
+
+
+
+              ];
+
+
+              specialArgs = {inherit nixos-hardware cmake-nix-hello-world;};
+            };
+
+        };
+    packages.visionfive2-sdcard = nixosConfigurations.visionfive2.config.system.build.sdImage;
+    packages.rpi4-sdcard = nixosConfigurations.rpi4.config.system.build.sdImage;
+    packages.default = packages.visionfive2-sdcard;
+
+  });
 }
