@@ -1,6 +1,6 @@
-# NixOS babysteps in CrossCompiling / image building
+# NixOS babysteps in CrossCompiling / image 
 
-An ongoing effort porting NixOS to the RISC-V architecture through cross compilation
+my try to get an easy (cross) image builder with nixos
 
 ## Supported Boards
 
@@ -20,3 +20,14 @@ nix build .#rpi4-sdcard
 ```
 
 
+## other things to keep an eye on:
+
+#### NickCao's RISC-V port
+[NickCao/nixos-riscv](https://github.com/NickCao/nixos-riscv/)
+
+#### official visionfive nixos-hw repo
+
+[nixos-hardware/starfive/visionfive/v2](https://github.com/NixOS/nixos-hardware/tree/master/starfive/visionfive/v2)
+
+#### easy to add sd-images
+[nixpkg/nixos/modules/installer/sd-card](https://github.com/NixOS/nixpkgs/tree/master/nixos/modules/installer/sd-card)
