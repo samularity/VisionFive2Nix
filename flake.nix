@@ -7,7 +7,7 @@
   inputs.flake-utils.url = "github:numtide/flake-utils";
   inputs.flake-utils.inputs.systems.follows = "systems";
 
-  inputs.cmake-nix-hello-world.url = github:samularity/cmake-nix-hello-world/32bit;
+  inputs.cmake-nix-hello-world.url = github:samularity/cmake-nix-hello-world;
   inputs.cmake-nix-hello-world.inputs.nixpkgs.follows = "nixpkgs";
 
   outputs = { self, nixpkgs, nixos-hardware, cmake-nix-hello-world, flake-utils, ... }:
@@ -20,23 +20,19 @@
               ./common.nix
               ];
               specialArgs = {inherit nixos-hardware cmake-nix-hello-world;};
-            };
+          };
 
           rpi4 = nixpkgs.lib.nixosSystem {
             modules = [
               ./rpi4.nix
               ./common.nix
               "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
-
-
-
               ];
-
-
               specialArgs = {inherit nixos-hardware cmake-nix-hello-world;};
-            };
+          };
 
         };
+
     packages.visionfive2-sdcard = nixosConfigurations.visionfive2.config.system.build.sdImage;
     packages.rpi4-sdcard = nixosConfigurations.rpi4.config.system.build.sdImage;
     packages.default = packages.visionfive2-sdcard;

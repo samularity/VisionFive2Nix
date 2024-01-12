@@ -8,16 +8,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1704923398,
-        "narHash": "sha256-DZt3axBjDJeS0F/qxWyLR0drQAx6bI34askIyYZXyAY=",
+        "lastModified": 1704984021,
+        "narHash": "sha256-K4ZJjsqYK4332OpX6miChOGt+0U3cBln7cncZCJ1H7s=",
         "owner": "samularity",
         "repo": "cmake-nix-hello-world",
-        "rev": "cab951d3a094d65fc6b3b75873535122410fbb87",
+        "rev": "a6564e54b0dc2fced5babe130da57f35920d9bb4",
         "type": "github"
       },
       "original": {
         "owner": "samularity",
-        "ref": "32bit",
         "repo": "cmake-nix-hello-world",
         "type": "github"
       }
